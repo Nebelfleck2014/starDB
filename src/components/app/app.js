@@ -1,40 +1,78 @@
+
 import React, { Component } from 'react';
 
 import Header from '../header';
 import RandomPlanet from '../random-planet';
-import ItemList from '../item-list';
-import PersonDetails from '../person-details';
+import ErrorBoundry from '../error-boundry';
 
+import Row from "../row/row";
+import ItemDetails, { Record } from "../item-details/item-details";
+import SwapiService from "../../services/swapi-service";
 
 import './app.css';
 
 export default class App extends Component {
 
-  state = {
-    selectedPerson: 5
-  }
+  swapiService = new SwapiService();
 
-  onPersonSelected = (id) => {
-    this.setState({
-      selectedPerson: id
-    })
-  }
+  state = {
+    showRandomPlanet: true
+  };
+
+  toggleRandomPlanet = () => {
+    this.setState((state) => {
+      return {
+        showRandomPlanet: !state.showRandomPlanet
+      }
+    });
+  };
 
   render() {
-    return (
-      <div>
-        <Header />
-        <RandomPlanet />
 
-        <div className="row mb2">
-          <div className="col-md-6">
-            <ItemList onItemSelected={this.onPersonSelected}/>
-          </div>
-          <div className="col-md-6">
-            <PersonDetails personId={this.state.selectedPerson}/>
-          </div>
+    const planet = this.state.showRandomPlanet ?
+      <RandomPlanet/> :
+      null;
+
+    const { getPerson,
+            getStarship,
+            getPersonImage,
+            getStarshipImage } = this.swapiService;
+
+    const personDetails = (
+      <ItemDetails
+        itemId={11}
+        getData={getPerson}
+        getImageUrl={getPersonImage} >
+
+        <Record field="gender" label="Gender:" />
+        <Record field="eyeColor" label="Eye Color:" />
+
+      </ItemDetails>
+    );
+
+    const starshipDetails = (
+      <ItemDetails
+        itemId={5}
+        getData={getStarship}
+        getImageUrl={getStarshipImage}>
+
+        <Record field="model" label="Model:" />
+        <Record field="length" label="Length:" />
+        <Record field="passengers" label="Passengers:" />
+      </ItemDetails>
+
+    );
+
+    return (
+      <ErrorBoundry>
+        <div className="stardb-app">
+          <Header />
+
+          <Row
+            left={personDetails}
+            right={starshipDetails} />
         </div>
-      </div>
+      </ErrorBoundry>
     );
   }
-};
+}
