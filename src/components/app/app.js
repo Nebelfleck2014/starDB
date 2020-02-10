@@ -9,6 +9,15 @@ import Row from "../row/row";
 import ItemDetails, { Record } from "../item-details/item-details";
 import SwapiService from "../../services/swapi-service";
 
+import {
+  PersonDetails,
+  PlanetDetails,
+  StarshipDetails,
+  PersonList,
+  PlanetList,
+  StarshipList
+} from '../sw-components'
+
 import './app.css';
 
 export default class App extends Component {
@@ -68,9 +77,17 @@ export default class App extends Component {
         <div className="stardb-app">
           <Header />
 
-          <Row
-            left={personDetails}
-            right={starshipDetails} />
+          <PersonDetails itemId={7}/>
+
+          <PlanetDetails itemId={1}/>
+
+          <StarshipDetails itemId={9}/>
+
+          <PersonList />
+
+          <StarshipList />
+
+          <PlanetList />
         </div>
       </ErrorBoundry>
     );
