@@ -22,7 +22,7 @@ export default class App extends Component {
           <div className="stardb-app">
             <Header />
 
-            <RandomPlanet/>
+            <RandomPlanet />
             <PeoplePage />
             <PlanetsPage />
             <StarshipsPage />

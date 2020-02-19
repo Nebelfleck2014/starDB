@@ -1,16 +1,7 @@
 import React from 'react';
 import ItemList from '../item-list';
-import {withData, withSwapiService} from '../hoc-helpers';
+import {withData, withSwapiService, withChildFunction, compose} from '../hoc-helpers';
 
-const withChildFunction = (Wrapped, fn) => {  //1) оборачиваемый компонент 2)props children
-  return (props) => {
-    return (
-      <Wrapped {...props}>
-        {fn}
-      </Wrapped>
-    );
-  }
-}
 
 const renderName = ({name}) => <span>{name}</span>
 
@@ -34,11 +25,25 @@ const mapStarshipMethodsToProps = (swapiService) => {
   }
 }
 
-const PersonList = withSwapiService(withData(withChildFunction(ItemList, renderName)), mapPersonMethodsToProps)
+const PersonList = compose(
+                     withSwapiService(mapPersonMethodsToProps),
+                     withData,
+                     withChildFunction(renderName)
+                   )(ItemList);
 
-const PlanetList = withSwapiService(withData(withChildFunction(ItemList, renderName)), mapPlanetMethodsToProps)
+const PlanetList = compose(
+                     withSwapiService(mapPlanetMethodsToProps),
+                     withData,
+                     withChildFunction(renderName)
+                   )(ItemList);
 
-const StarshipList = withSwapiService(withData(withChildFunction(ItemList, renderName)), mapStarshipMethodsToProps)
+const StarshipList = compose(
+                       withSwapiService(mapStarshipMethodsToProps),
+                       withData,
+                       withChildFunction(renderModelAndName)
+                     )(ItemList);
+
+/*функция withChildFunction получает компонент, оборачивает его и возвращает, далее компонент идет в withData, а потом в withSwapiService*/
 
 export {
   PersonList,
